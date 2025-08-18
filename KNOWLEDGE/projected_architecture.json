@@ -1,0 +1,358 @@
+﻿[
+  {
+    "n": {
+      "identity": 0,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Client",
+        "name": "Claude Desktop",
+        "id": "client-claude"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:0"
+    }
+  },
+  {
+    "n": {
+      "identity": 1,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Guard",
+        "name": "MCP Guarda",
+        "id": "guard-core"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:1"
+    }
+  },
+  {
+    "n": {
+      "identity": 2,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Adapter",
+        "name": "Client Adapter",
+        "id": "adapter-client"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:2"
+    }
+  },
+  {
+    "n": {
+      "identity": 3,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Adapter",
+        "name": "Server Adapter",
+        "id": "adapter-server"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:3"
+    }
+  },
+  {
+    "n": {
+      "identity": 4,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Router/Inspector",
+        "id": "router"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:4"
+    }
+  },
+  {
+    "n": {
+      "identity": 5,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Policy Engine",
+        "id": "policy"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:5"
+    }
+  },
+  {
+    "n": {
+      "identity": 6,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "UI",
+        "name": "Consent UI",
+        "id": "consent"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:6"
+    }
+  },
+  {
+    "n": {
+      "identity": 7,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Write Quarantine",
+        "id": "quarantine"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:7"
+    }
+  },
+  {
+    "n": {
+      "identity": 8,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Network Gate",
+        "id": "netgate"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:8"
+    }
+  },
+  {
+    "n": {
+      "identity": 9,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Exec Gate",
+        "id": "execgate"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:9"
+    }
+  },
+  {
+    "n": {
+      "identity": 10,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Secrets Broker",
+        "id": "secrets"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:10"
+    }
+  },
+  {
+    "n": {
+      "identity": 11,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Approval Store",
+        "id": "approvals"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:11"
+    }
+  },
+  {
+    "n": {
+      "identity": 12,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Audit Logger",
+        "id": "audit"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:12"
+    }
+  },
+  {
+    "n": {
+      "identity": 13,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Service",
+        "name": "Config Manager",
+        "id": "config"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:13"
+    }
+  },
+  {
+    "n": {
+      "identity": 14,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Server",
+        "name": "Files Server",
+        "id": "srv-files"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:14"
+    }
+  },
+  {
+    "n": {
+      "identity": 15,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Server",
+        "name": "Shell Server",
+        "id": "srv-shell"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:15"
+    }
+  },
+  {
+    "n": {
+      "identity": 16,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Server",
+        "name": "Browser Server",
+        "id": "srv-browser"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:16"
+    }
+  },
+  {
+    "n": {
+      "identity": 17,
+      "labels": [
+        "Component"
+      ],
+      "properties": {
+        "kind": "Server",
+        "name": "GitHub Server",
+        "id": "srv-github"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:17"
+    }
+  },
+  {
+    "n": {
+      "identity": 18,
+      "labels": [
+        "Object"
+      ],
+      "properties": {
+        "id": "pol-default",
+        "label": "Default Policy",
+        "type": "Policy"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:18"
+    }
+  },
+  {
+    "n": {
+      "identity": 19,
+      "labels": [
+        "Object"
+      ],
+      "properties": {
+        "id": "pol-files",
+        "label": "Files Policy",
+        "type": "Policy"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:19"
+    }
+  },
+  {
+    "n": {
+      "identity": 20,
+      "labels": [
+        "Object"
+      ],
+      "properties": {
+        "id": "pol-shell",
+        "label": "Shell Policy",
+        "type": "Policy"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:20"
+    }
+  },
+  {
+    "n": {
+      "identity": 21,
+      "labels": [
+        "Object"
+      ],
+      "properties": {
+        "id": "pol-github",
+        "label": "GitHub Policy",
+        "type": "Policy"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:21"
+    }
+  },
+  {
+    "n": {
+      "identity": 22,
+      "labels": [
+        "Object"
+      ],
+      "properties": {
+        "action": "ALLOW",
+        "id": "rule-read",
+        "label": "Allow reads",
+        "type": "Rule",
+        "target": "files.read"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:22"
+    }
+  },
+  {
+    "n": {
+      "identity": 23,
+      "labels": [
+        "Object"
+      ],
+      "properties": {
+        "action": "ASK",
+        "id": "rule-write",
+        "label": "Ask writes",
+        "type": "Rule",
+        "target": "files.write"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:23"
+    }
+  },
+  {
+    "n": {
+      "identity": 24,
+      "labels": [
+        "Object"
+      ],
+      "properties": {
+        "action": "DENY",
+        "id": "rule-exec",
+        "label": "Deny exec",
+        "type": "Rule",
+        "target": "shell.exec"
+      },
+      "elementId": "4:e6a89b53-bd3a-499e-8d67-fda0b399a5a5:24"
+    }
+  }
+]

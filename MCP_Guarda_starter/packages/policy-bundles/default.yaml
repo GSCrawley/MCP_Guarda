@@ -1,0 +1,20 @@
+defaults:
+  read: allow
+  write: ask
+  network: ask
+  exec: deny
+servers:
+  files:
+    ask:
+      - tool: files.write
+        paths: ["~/Projects/demo/**"]
+    allow:
+      - tool: files.read
+        paths: ["~/Projects/demo/**", "/etc/hostname"]
+  shell:
+    deny:
+      - tool: shell.exec
+  github:
+    ask:
+      - tool: net.fetch
+        hosts: ["api.github.com"]

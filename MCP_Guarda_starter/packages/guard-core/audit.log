@@ -1,0 +1,4 @@
+{"ts":"2025-08-12T15:00:00.432Z","method":"files.read","params":{"path":"~/Projects/demo/README.md"},"decision":"allow"}
+{"ts":"2025-08-12T15:00:00.932Z","method":"files.write","params":{"path":"~/Projects/demo/README.md","content":"Updated content\n"},"decision":"ask"}
+{"ts":"2025-08-12T15:00:01.432Z","method":"net.fetch","params":{"url":"https://api.github.com/repos/foo/bar","method":"GET"},"decision":"ask"}
+{"ts":"2025-08-12T15:00:01.932Z","method":"shell.exec","params":{"cmd":"rm -rf /"},"decision":"deny"}
