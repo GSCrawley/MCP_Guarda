@@ -32,7 +32,7 @@ class ApprovalCache {
     const key = this._keyFor(request);
     const row = this.store.get(key);
     if (!row) return null;
-    if (row.expiresAt < this._now()) {
+    if (row.expiresAt &lt; this._now()) {
       this.store.delete(key);
       return null;
     }
@@ -47,7 +47,7 @@ class ApprovalCache {
   prune() {
     const now = this._now();
     for (const [k, v] of this.store.entries()) {
-      if (v.expiresAt < now) this.store.delete(k);
+      if (v.expiresAt &lt; now) this.store.delete(k);
     }
   }
 }

@@ -1,4 +1,3 @@
-```markdown
 name: Feature request
 about: Request a new feature or enhancement for MCP Guarda
 title: "[feature] "
@@ -23,4 +22,3 @@ body:
       label: Acceptance criteria
       description: |
         What must be true for this to be considered done?
-```
