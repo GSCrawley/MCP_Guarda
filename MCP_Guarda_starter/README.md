@@ -2,12 +2,15 @@
 
 **MCP Guarda** is a local **policy proxy + consent gateway** for MCP toolchains. It sits between the MCP client and MCP servers, enforcing **deny-by-default** policies, intent-bound approvals, sandboxing for writes, and full audit logs.
 
-> This starter is a PoC scaffold for your investor demo. The JSON-RPC plumbing uses **NDJSON** for the demo server. Real MCP stdio framing (Content-Length) can be implemented next.
+> This starter contains the **working PoC** foundation. Latest modular components (Content-Length framing, enhanced caching) are in `../packages/guard-core/` and ready for integration.
+>
+> 📋 **See [../INTEGRATED_TASKS.md](../INTEGRATED_TASKS.md) for current development priorities and [../INTEGRATION_GUIDE.md](../INTEGRATION_GUIDE.md) for step-by-step integration instructions.**
 
 ## Packages
 - `packages/guard-core` – CLI proxy that inspects calls, enforces policy, hosts consent API.
 - `packages/policy-bundles` – YAML policies and schema.
 - `packages/examples` – Fake NDJSON “MCP-like” servers for demo.
+> **⚠️ Latest Enhanced Components Available**: The `../packages/guard-core/` directory contains newer modular components including real Content-Length MCP framing and enhanced approval caching. See [../INTEGRATION_GUIDE.md](../INTEGRATION_GUIDE.md) for integration instructions.
 
 ## Quick demo
 ```bash
