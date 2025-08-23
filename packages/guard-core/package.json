@@ -1,0 +1,13 @@
+{
+  "name": "@mcp-guarda/guard-core",
+  "version": "0.1.0",
+  "description": "Core components for MCP Guarda security proxy",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"No tests yet - placeholder for CI\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "author": "GSCrawley",
+  "license": "Apache-2.0"
+}
