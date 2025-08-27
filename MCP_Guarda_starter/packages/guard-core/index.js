@@ -12,10 +12,14 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import chokidar from 'chokidar';
 import { nanoid } from 'nanoid';
+import readline from 'readline';
+import ApprovalCache from './src/approval_cache.js';
+import { ContentLengthParser, writeFramed } from './src/adapters/content_length_adapter.js';
 
 const argv = yargs(hideBin(process.argv))
-  .usage('$0 --policy <file> [--demo-traffic] --port 8787 -- <server-cmd> [args...]')
+  .usage('$0 --policy <file> [--protocol <type>] [--demo-traffic] --port 8787 -- <server-cmd> [args...]')
   .option('policy', { type: 'string', demandOption: true })
+  .option('protocol', { type: 'string', default: 'auto', choices: ['ndjson', 'content-length', 'auto'], desc: 'Protocol type for MCP communication' })
   .option('port', { type: 'number', default: 8787 })
   .option('demo-traffic', { type: 'boolean', default: false, desc: 'Generate sample client requests internally for the demo' })
   .help().argv
@@ -27,7 +31,7 @@ const app = express()
 app.use(express.json())
 
 const approvals = new Map()   // id -> { status: 'pending'|'approved'|'denied', request }
-const cache = new Map()       // intentKey -> { decision, expiresAt }
+const cache = new ApprovalCache({ ttlMs: 10 * 60 * 1000 }); // 10 minutes
 const pendingQueue = new Map()// id -> resolve()
 
 app.get('/', (req,res)=>{
@@ -55,8 +59,9 @@ app.post('/decide/:id', (req,res)=>{
   const a = approvals.get(id)
   if (!a) return res.status(404).send('not found')
   a.status = approve ? 'approved' : 'denied'
-  // Remember decision for 10 minutes (simple cache)
-  cache.set(a.intentKey, { decision: a.status, expiresAt: Date.now()+10*60*1000 })
+  // Remember decision for 10 minutes using ApprovalCache
+  const request = { method: a.request.method, target: extractTarget(a.request.params), args: a.request.params }
+  cache.set(request, a.status === 'approved' ? 'allow' : 'deny')
   const waiter = pendingQueue.get(id)
   if (waiter) { waiter(); pendingQueue.delete(id) }
   res.redirect('/')
@@ -78,49 +83,100 @@ child.on('exit', (code)=>{
   process.exit(code || 0)
 })
 
-// NDJSON framing (PoC): each line is a JSON-RPC request/response
-// In production: implement Content-Length framing to support real MCP clients.
-import readline from 'readline';
-const rlClient = readline.createInterface({ input: process.stdin });
-const rlServer = readline.createInterface({ input: child.stdout });
+// Protocol detection and setup
+const protocol = argv.protocol;
 
-rlClient.on('line', async (line)=>{
-  if (!line.trim()) return
-  let msg
-  try { msg = JSON.parse(line) } catch (e) { return passthroughToServer(line) }
-  if (msg && msg.method) {
-    handleRequestFromClient(msg)
-  } else {
-    // not a request; pass through
-    passthroughToServer(line)
+if (protocol === 'content-length' || (protocol === 'auto' && process.env.MCP_PROTOCOL === 'content-length')) {
+  console.error('[guard] using Content-Length framing');
+  
+  // Set up Content-Length parser for client input
+  const clientParser = new ContentLengthParser();
+  process.stdin.pipe(clientParser);
+  
+  clientParser.on('data', async (msg) => {
+    if (msg && msg.method) {
+      const response = await handleRequestFromClient(msg);
+      if (response) {
+        writeFramed(process.stdout, response);
+      }
+    } else {
+      // Pass through non-method messages
+      writeFramed(child.stdin, msg);
+    }
+  });
+  
+  // Set up Content-Length parser for server output
+  const serverParser = new ContentLengthParser();
+  child.stdout.pipe(serverParser);
+  
+  serverParser.on('data', (msg) => {
+    writeFramed(process.stdout, msg);
+  });
+  
+  function passthroughToServer(msg) {
+    writeFramed(child.stdin, msg);
   }
-})
 
-rlServer.on('line', (line)=>{
-  process.stdout.write(line+'\n')
-})
+} else {
+  // NDJSON framing (PoC): each line is a JSON-RPC request/response
+  console.error('[guard] using NDJSON framing (legacy/demo mode)');
+  const rlClient = readline.createInterface({ input: process.stdin });
+  const rlServer = readline.createInterface({ input: child.stdout });
 
-function passthroughToServer(line) {
-  child.stdin.write(line+'\n')
+  rlClient.on('line', async (line)=>{
+    if (!line.trim()) return
+    let msg
+    try { msg = JSON.parse(line) } catch (e) { return passthroughToServer(line) }
+    if (msg && msg.method) {
+      handleRequestFromClient(msg)
+    } else {
+      // not a request; pass through
+      passthroughToServer(line)
+    }
+  })
+
+  rlServer.on('line', (line)=>{
+    process.stdout.write(line+'\n')
+  })
+
+  function passthroughToServer(line) {
+    child.stdin.write(line+'\n')
+  }
 }
 
 async function handleRequestFromClient(req) {
   const { method, params, id } = req
   const decision = await decide(method, params)
   logAudit({ method, params, decision })
+  
   if (decision === 'deny') {
     const err = { jsonrpc:'2.0', id, error: { code: -32001, message: `Denied by policy: ${method}` } }
-    return process.stdout.write(JSON.stringify(err)+'\n')
+    if (protocol === 'content-length') {
+      return err;
+    } else {
+      return process.stdout.write(JSON.stringify(err)+'\n')
+    }
   }
+  
   if (decision === 'ask') {
     const ok = await awaitApproval(method, params)
     if (!ok) {
       const err = { jsonrpc:'2.0', id, error: { code: -32002, message: `Denied by user: ${method}` } }
-      return process.stdout.write(JSON.stringify(err)+'\n')
+      if (protocol === 'content-length') {
+        return err;
+      } else {
+        return process.stdout.write(JSON.stringify(err)+'\n')
+      }
     }
   }
-  // allow
-  child.stdin.write(JSON.stringify(req)+'\n')
+  
+  // allow - forward to server
+  if (protocol === 'content-length') {
+    writeFramed(child.stdin, req);
+    return null; // Response will come from server
+  } else {
+    child.stdin.write(JSON.stringify(req)+'\n')
+  }
 }
 
 function summarize(req) {
@@ -140,6 +196,13 @@ function summarize(req) {
   return JSON.stringify(params||{})
 }
 
+function extractTarget(params) {
+  if (params?.path) return params.path;
+  if (params?.url) return params.url;
+  if (params?.cmd) return params.cmd;
+  return JSON.stringify(params || {});
+}
+
 function intentKey(method, params) {
   if (method.startsWith('files.')) return `${method}:${params?.path}`
   if (method==='net.fetch') return `${method}:${params?.url}`
@@ -148,10 +211,10 @@ function intentKey(method, params) {
 }
 
 async function decide(method, params) {
-  // cache check
-  const key = intentKey(method, params)
-  const cached = cache.get(key)
-  if (cached && cached.expiresAt > Date.now()) return cached.decision === 'approved' ? 'allow' : 'deny'
+  // cache check using ApprovalCache
+  const request = { method, target: extractTarget(params), args: params }
+  const cached = cache.get(request)
+  if (cached) return cached
 
   // policy
   const p = POL
