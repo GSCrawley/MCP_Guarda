@@ -129,6 +129,14 @@ sequenceDiagram
 
 See [INTEGRATED_TASKS.md](./INTEGRATED_TASKS.md) for detailed task breakdown.
 
+## Development with Warp
+
+For comprehensive development guidelines when using the Warp terminal, see **[WARP.md](./WARP.md)**. This file includes:
+- Essential commands for building, testing, and running the project
+- Architecture overview and key code patterns
+- Troubleshooting guides and debugging commands
+- Current development phase and priorities
+
 ## Contributing
 
 1. **Current Priority**: Help with integration in [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
